@@ -1,0 +1,28 @@
+<!-- SCRIPT -->
+<script>
+// LOAD SAVED COLOR
+window.onload = function () {
+    let savedColor = localStorage.getItem("bgColor");
+
+    if (savedColor) {
+        document.body.style.background = savedColor;
+        document.getElementById("bgColor").value = savedColor;
+    }
+};
+
+// CHANGE COLOR
+document.getElementById("bgColor").addEventListener("input", function () {
+    document.body.style.background = this.value;
+    localStorage.setItem("bgColor", this.value);
+});
+
+// RESET
+function resetColor() {
+    document.body.style.background = "";
+    localStorage.removeItem("bgColor");
+    document.getElementById("bgColor").value = "#ffffff";
+}
+</script>
+
+</body>
+</html>
