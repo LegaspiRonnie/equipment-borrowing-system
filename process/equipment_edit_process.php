@@ -1,13 +1,12 @@
 <?php
 include '../config/db.php';
 
-$id = $_POST['id'];
-$name = $_POST['name'];
+$id       = (int)$_POST['id'];
+$name     = $_POST['name'];
 $category = $_POST['category'];
 $quantity = $_POST['quantity'];
-$status = $_POST['status'];
-
-$image = $_FILES['image']['name'];
+$status   = $_POST['status'];
+$image    = $_FILES['image']['name'];
 
 if ($image != "") {
     $tmp = $_FILES['image']['tmp_name'];
@@ -20,7 +19,15 @@ if ($image != "") {
     $stmt->bind_param("ssisi", $name, $category, $quantity, $status, $id);
 }
 
-$stmt->execute();
-
-header("Location: ../admin/equipment.php");
+if ($stmt->execute()) {
+    echo "<script>
+            alert('Equipment updated successfully!');
+            window.location.href='../admin/equipment.php';
+          </script>";
+} else {
+    echo "<script>
+            alert('Error updating equipment.');
+            window.history.back();
+          </script>";
+}
 ?>

@@ -9,249 +9,178 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'user') {
 
 $user_id = (int) $_SESSION['user_id'];
 
-// Equipment
-$equipment = $conn->query("SELECT * FROM equipment WHERE quantity > 0");
+// Search Logic
+$search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+$equip_query = "SELECT * FROM equipment WHERE quantity > 0";
+if (!empty($search)) {
+    $equip_query .= " AND (name LIKE '%$search%' OR category LIKE '%$search%')";
+}
+$equip_query .= " ORDER BY name ASC";
+$equipment = $conn->query($equip_query);
 
-// Requests (history_logs action = request)
+// Pending Requests
 $requests = $conn->query("
-    SELECT hl.*, e.name, e.image, e.category
-    FROM history_logs hl
-    LEFT JOIN equipment e ON hl.equipment_id = e.id
-    WHERE hl.user_id = $user_id
-    AND hl.action = 'request'
-    ORDER BY hl.id DESC
+    SELECT br.*, e.name, e.image 
+    FROM borrow_requests br
+    LEFT JOIN equipment e ON br.equipment_id = e.id
+    WHERE br.user_id = $user_id AND br.status = 'pending'
+    ORDER BY br.id DESC
 ");
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Borrow System</title>
-    
+    <meta charset="UTF-8">
+    <title>Borrow System</title>
     <link rel="stylesheet" href="../assets/css/global.css">
+    <style>
+        :root { --primary: #1e293b; --accent: #3b82f6; --bg: #f8fafc; }
+        body { margin: 0; font-family: sans-serif; background: var(--bg); }
+        .main { margin-left: 260px; padding: 25px; }
 
-<style>
-body {
-    margin:0;
-    font-family:Arial;
-    background:#f5f5f5;
-}
+        /* ALERT BANNER STYLE */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            animation: slideDown 0.5s ease-out;
+        }
+        .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
+        /* Layout */
+        .layout { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
+        .panel { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        
+        .equip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 15px; }
+        .equip-card { border: 2px solid #f1f5f9; padding: 10px; border-radius: 10px; cursor: pointer; text-align: center; }
+        .equip-card.selected { border-color: var(--accent); background: #eff6ff; }
+        .equip-card img { width: 100%; height: 100px; object-fit: cover; border-radius: 5px; }
 
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; margin-bottom: 5px; color: #64748b; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        
+        .btn-submit { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-submit:disabled { background: #ccc; }
 
-.sidebar a:hover {
-    color:white;
-}
-
-/* MAIN */
-.main {
-    margin-left:250px;
-    padding:20px;
-}
-
-/* 3 PANEL GRID */
-.layout {
-    display:grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto auto;
-    gap:15px;
-}
-
-/* 1 EQUIPMENT */
-.equipment {
-    grid-column:1/2;
-    grid-row:1/3;
-    background:white;
-    padding:15px;
-    border-radius:10px;
-    height:85vh;
-    overflow-y:auto;
-}
-
-.equip-grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-    gap:10px;
-}
-
-.equip-card {
-    background:#fff;
-    border:1px solid #ddd;
-    padding:10px;
-    border-radius:10px;
-    cursor:pointer;
-}
-
-.equip-card img {
-    width:100%;
-    height:100px;
-    object-fit:cover;
-}
-
-/* 2 FORM */
-.form-box {
-    grid-column:2/3;
-    grid-row:1/2;
-    background:white;
-    padding:15px;
-    border-radius:10px;
-    height:45vh;
-}
-
-/* 3 REQUESTS */
-.request-box {
-    grid-column:2/3;
-    grid-row:2/3;
-    background:white;
-    padding:15px;
-    border-radius:10px;
-    height:38vh;
-    overflow-y:auto;
-}
-
-.req-card {
-    display:flex;
-    gap:10px;
-    padding:8px;
-    border-bottom:1px solid #eee;
-}
-
-.req-card img {
-    width:40px;
-    height:40px;
-    object-fit:cover;
-    border-radius:5px;
-}
-</style>
+        .req-card { display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid #eee; }
+        .req-card img { width: 40px; height: 40px; border-radius: 4px; }
+    </style>
 </head>
-
 <body>
 
-<!-- SIDEBAR -->
-<?php
-include '../includes/sidebar-user.php';
-?>
+<?php include '../includes/sidebar-user.php'; ?>
 
-
-<!-- MAIN -->
 <div class="main">
 
-<div class="layout">
+    <?php if (isset($_SESSION['msg'])): ?>
+        <div class="alert alert-<?= $_SESSION['msg_type']; ?>" id="alert-box">
+            <?= $_SESSION['msg']; ?>
+        </div>
+        <?php 
+            unset($_SESSION['msg']); 
+            unset($_SESSION['msg_type']); 
+        ?>
+        <script>
+            // Automatically hide the alert after 4 seconds
+            setTimeout(() => {
+                const box = document.getElementById('alert-box');
+                if(box) box.style.display = 'none';
+            }, 4000);
+        </script>
+    <?php endif; ?>
 
-<!-- 1 EQUIPMENT -->
-<div class="equipment">
+    <div class="layout">
+        
+        <div class="panel">
+            <div style="display:flex; justify-content: space-between; align-items: center;">
+                <h3>Available Equipment</h3>
+                <form method="GET">
+                    <input type="text" name="search" placeholder="Search..." value="<?= htmlspecialchars($search) ?>" style="padding:8px; border-radius:5px; border:1px solid #ddd;">
+                </form>
+            </div>
 
-<h3>Equipment</h3>
+            <div class="equip-grid">
+                <?php while($row = $equipment->fetch_assoc()): ?>
+                    <div class="equip-card" onclick="selectItem(this)" 
+                         data-id="<?= $row['id'] ?>" data-name="<?= htmlspecialchars($row['name']) ?>" data-qty="<?= $row['quantity'] ?>">
+                        <img src="../assets/images/<?= $row['image'] ?>" onerror="this.src='https://via.placeholder.com/150'">
+                        <div style="font-weight:bold; margin-top:5px;"><?= htmlspecialchars($row['name']) ?></div>
+                        <small>Stock: <?= $row['quantity'] ?></small>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
 
-<div class="equip-grid">
+        <div>
+            <div class="panel">
+                <h3>Borrow Form</h3>
+                <div id="preview" style="background:#f8fafc; padding:10px; border-radius:8px; margin-bottom:15px; border:1px dashed #cbd5e1; text-align:center;">
+                    Select an item
+                </div>
 
-<?php if ($equipment && $equipment->num_rows > 0): ?>
+                <form action="../process/borrow_request_process.php" method="POST" onsubmit="return confirmSubmit()">
+                    <input type="hidden" name="equipment_id" id="equipment_id">
+                    
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" name="quantity" id="qty" min="1" required>
+                    </div>
 
-<?php while($row = $equipment->fetch_assoc()): ?>
+                    <div class="form-group">
+                        <label>Purpose</label>
+                        <input type="text" name="purpose" required>
+                    </div>
 
-<div class="equip-card"
-     onclick="selectItem(this)"
-     data-id="<?= $row['id']; ?>"
-     data-name="<?= htmlspecialchars($row['name']); ?>"
-     data-category="<?= htmlspecialchars($row['category']); ?>"
-     data-qty="<?= $row['quantity']; ?>">
+                    <div class="form-group">
+                        <label>Return Date</label>
+                        <input type="date" name="return_date" min="<?= date('Y-m-d') ?>" required>
+                    </div>
 
-    <img src="../assets/images/<?= htmlspecialchars($row['image']); ?>"
-         onerror="this.src='https://via.placeholder.com/150'">
+                    <button type="submit" id="btn" class="btn-submit" disabled>Submit Request</button>
+                </form>
+            </div>
 
-    <strong><?= htmlspecialchars($row['name']); ?></strong><br>
-    <small><?= htmlspecialchars($row['category']); ?></small><br>
-    <small>Stock: <?= (int)$row['quantity']; ?></small>
+            <div class="panel" style="margin-top:20px;">
+                <h3>Pending Requests</h3>
+                <?php while($r = $requests->fetch_assoc()): ?>
+                    <div class="req-card">
+                        <img src="../assets/images/<?= $r['image'] ?>">
+                        <div>
+                            <div style="font-size:14px; font-weight:bold;"><?= htmlspecialchars($r['name']) ?></div>
+                            <small style="color:orange;">Pending Approval</small>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
 
-</div>
-
-<?php endwhile; ?>
-
-<?php else: ?>
-<p>No equipment available</p>
-<?php endif; ?>
-
-</div>
-
-</div>
-
-<!-- 2 FORM -->
-<div class="form-box">
-
-<h3>Borrow Form</h3>
-
-<div id="preview">Select item</div>
-
-<form action="../process/borrow_request_process.php" method="POST">
-
-<input type="hidden" name="equipment_id" id="equipment_id">
-
-<input type="number" name="quantity" id="qty" placeholder="Quantity">
-<br><br>
-
-<input type="text" name="purpose" placeholder="Purpose">
-<br><br>
-
-<input type="date" name="return_date">
-<br><br>
-
-<button type="submit" id="btn" disabled>Submit</button>
-
-</form>
-
-</div>
-
-<!-- 3 REQUESTS -->
-<div class="request-box">
-
-<h3>Requested Borrow</h3>
-
-<?php if ($requests && $requests->num_rows > 0): ?>
-
-<?php while($r = $requests->fetch_assoc()): ?>
-
-<div class="req-card">
-
-    <img src="../assets/images/<?= htmlspecialchars($r['image']); ?>"
-         onerror="this.src='https://via.placeholder.com/40'">
-
-    <div>
-        <strong><?= htmlspecialchars($r['name']); ?></strong><br>
-        <small><?= htmlspecialchars($r['category']); ?></small><br>
-        <small style="color:orange;">Pending Request</small>
     </div>
-
-</div>
-
-<?php endwhile; ?>
-
-<?php else: ?>
-
-<p>No requests yet</p>
-
-<?php endif; ?>
-
-</div>
-
-</div>
-
 </div>
 
 <script>
-function selectItem(card){
-    document.querySelectorAll('.equip-card').forEach(c=>c.style.border='1px solid #ddd');
-    card.style.border='2px solid blue';
+let itemName = "";
 
-    const {id,name,category,qty} = card.dataset;
+function selectItem(card) {
+    document.querySelectorAll('.equip-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+
+    const {id, name, qty} = card.dataset;
+    itemName = name;
 
     document.getElementById('equipment_id').value = id;
-    document.getElementById('btn').disabled = false;
-
     document.getElementById('qty').max = qty;
+    document.getElementById('btn').disabled = false;
+    document.getElementById('preview').innerHTML = `<strong>${name}</strong><br><small>Stock: ${qty}</small>`;
+}
 
-    document.getElementById('preview').innerHTML =
-        `<b>${name}</b><br>${category}<br>Stock: ${qty}`;
+function confirmSubmit() {
+    return confirm("Send borrow request for " + itemName + "?");
 }
 </script>
 

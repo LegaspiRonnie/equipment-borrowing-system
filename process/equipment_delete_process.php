@@ -8,14 +8,12 @@ if (!isset($_GET['id'])) {
 }
 
 $id = intval($_GET['id']);
-$user_id = $_SESSION['user_id'] ?? 0;
 
 // START TRANSACTION
 $conn->begin_transaction();
 
 try {
-
-    // 1. DELETE FROM borrow_requests (FIRST - most dependent)
+    // 1. DELETE FROM borrow_requests
     $stmt1 = $conn->prepare("DELETE FROM borrow_requests WHERE equipment_id = ?");
     $stmt1->bind_param("i", $id);
     $stmt1->execute();
@@ -25,12 +23,12 @@ try {
     $stmt2->bind_param("i", $id);
     $stmt2->execute();
 
-    // 3. DELETE FROM history_logs (optional but recommended)
+    // 3. DELETE FROM history_logs
     $stmt3 = $conn->prepare("DELETE FROM history_logs WHERE equipment_id = ?");
     $stmt3->bind_param("i", $id);
     $stmt3->execute();
 
-    // 4. NOW DELETE THE MAIN EQUIPMENT
+    // 4. DELETE THE MAIN EQUIPMENT
     $stmt4 = $conn->prepare("DELETE FROM equipment WHERE id = ?");
     $stmt4->bind_param("i", $id);
     $stmt4->execute();
@@ -38,14 +36,22 @@ try {
     // COMMIT ALL CHANGES
     $conn->commit();
 
-    header("Location: ../admin/equipment.php?success=deleted");
+    // Success Alert and Redirect
+    echo "<script>
+            alert('Equipment and all related records deleted successfully.');
+            window.location.href = '../admin/equipment.php';
+          </script>";
     exit();
 
 } catch (Exception $e) {
-
     // ROLLBACK IF ANY ERROR
     $conn->rollback();
 
-    echo "Error deleting equipment: " . $e->getMessage();
+    // Error Alert and Redirect back
+    echo "<script>
+            alert('Error deleting equipment: " . addslashes($e->getMessage()) . "');
+            window.history.back();
+          </script>";
+    exit();
 }
 ?>

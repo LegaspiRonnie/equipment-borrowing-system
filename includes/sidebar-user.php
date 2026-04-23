@@ -142,6 +142,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <span class="icon">📜</span>
         <span class="text">History</span>
     </a>
+<a href="../logout.php" class="<?= $current_page == 'logout.php' ? 'active' : '' ?>">
+    <i>🚪</i> <span>Logout</span>
+</a>
 
 </div>
 

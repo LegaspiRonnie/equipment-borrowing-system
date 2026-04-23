@@ -177,6 +177,9 @@ body {
     <a href="settings.php" class="<?= $current_page == 'settings.php' ? 'active' : '' ?>">
         <i>⚙️</i> <span>Settings</span>
     </a>
+<a href="../logout.php" class="<?= $current_page == 'logout.php' ? 'active' : '' ?>">
+    <i>🚪</i> <span>Logout</span>
+</a>
 
 </div>
 
