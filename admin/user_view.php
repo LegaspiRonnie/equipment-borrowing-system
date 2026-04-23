@@ -14,7 +14,10 @@ $user = $result->fetch_assoc();
 </head>
 <body>
 
-<div class="sidebar">...</div>
+<?php
+include '../includes/sidebar.php';
+?>
+
 
 <div class="main">
 <h1>User Details</h1>

@@ -9,17 +9,10 @@ include '../includes/header.html';
 </head>
 <body>
 
-<div class="sidebar">
-    <h2>ADMIN</h2>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="equipment.html">Equipment</a>
-    <a href="borrow_requests.html">Borrow Requests</a>
-    <a href="return_items.html">Returns</a>
-    <a href="reports.html">Reports</a>
-    <a href="history.html">History</a>
-    <a href="users.html">Users</a>
-    <a href="settings.html">Settings</a>
-</div>
+<?php
+include '../includes/sidebar.php';
+?>
+
 
 <div class="main">
 

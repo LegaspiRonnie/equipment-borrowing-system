@@ -10,7 +10,10 @@ $id = $_GET['id'];
 </head>
 <body>
 
-<div class="sidebar">...</div>
+<?php
+include '../includes/sidebar.php';
+?>
+
 
 <div class="main">
 <h1>Delete User</h1>

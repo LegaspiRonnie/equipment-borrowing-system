@@ -1,24 +1,40 @@
-<?php $id = $_GET['id']; ?>
+<?php 
+if (!isset($_GET['id'])) {
+    header("Location: equipment.php");
+    exit();
+}
+
+$id = intval($_GET['id']); // secure
+?>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Delete Equipment</title>
-<link rel="stylesheet" href="../assets/css/global.css">
+    <title>Delete Equipment</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
 </head>
 <body>
 
-<div class="sidebar">...</div>
+<?php
+include '../includes/sidebar.php';
+?>
+
 
 <div class="main">
-<h1>Delete Equipment</h1>
+    <h1>Delete Equipment</h1>
 
-<p>Are you sure you want to delete this equipment?</p>
+    <p>Are you sure you want to delete this equipment?</p>
 
-<a href="../process/equipment_delete_process.php?id=<?php echo $id; ?>">
-<button class="btn btn-delete">Yes, Delete</button>
-</a>
+    <!-- YES DELETE -->
+    <a href="../process/equipment_delete_process.php?id=<?php echo $id; ?>">
+        <button class="btn btn-delete">Yes, Delete</button>
+    </a>
 
+    <!-- CANCEL -->
+    <a href="equipment.php">
+        <button class="btn">Cancel</button>
+    </a>
 </div>
+
 </body>
 </html>

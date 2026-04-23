@@ -111,13 +111,9 @@ $equipment = $conn->query("SELECT * FROM equipment");
 
 <body>
 
-<div class="sidebar">
-    <h2>USER</h2>
-    <a href="dashboard.php">Home</a>
-    <a href="borrow.php">Borrow</a>
-    <a href="my_items.php">My Items</a>
-    <a href="history.php">History</a>
-</div>
+<?php
+include '../includes/sidebar-user.php';
+?>
 
 <div class="main">
 

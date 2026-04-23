@@ -6,7 +6,10 @@
 </head>
 <body>
 
-<div class="sidebar">...</div>
+<?php
+include '../includes/sidebar.php';
+?>
+
 
 <div class="main">
 <h1>Add Equipment</h1>

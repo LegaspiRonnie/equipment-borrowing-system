@@ -9,17 +9,10 @@ $result = $conn->query("SELECT * FROM users ORDER BY created_at DESC");
 include '../includes/header.html';
 ?>
 
-<div class="sidebar">
-    <h2>ADMIN</h2>
-    <a href="dashboard.php">Dashboard</a>
-    <a href="equipment.php">Equipment</a>
-    <a href="borrow_requests.php">Borrow Requests</a>
-    <a href="return_items.php">Returns</a>
-    <a href="reports.php">Reports</a>
-    <a href="history.php">History</a>
-    <a href="users.php">Users</a>
-    <a href="settings.php">Settings</a>
-</div>
+<?php
+include '../includes/sidebar.php';
+?>
+
 
 <div class="main">
 
