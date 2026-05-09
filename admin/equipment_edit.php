@@ -1,4 +1,6 @@
 <?php
+require_once '../config/auth.php';
+require_role('admin');
 include '../config/db.php';
 $id = (int)$_GET['id'];
 $result = $conn->query("SELECT * FROM equipment WHERE id=$id");
@@ -141,5 +143,4 @@ $data = $result->fetch_assoc();
     </div>
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

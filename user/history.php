@@ -1,11 +1,7 @@
 <?php
-session_start();
+require_once '../config/auth.php';
+require_role('user');
 include '../config/db.php';
-
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit();
-}
 
 $user_id = (int) $_SESSION['user_id'];
 $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
@@ -190,5 +186,4 @@ $logs = $conn->query("
     </div>
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

@@ -1,4 +1,6 @@
 <?php
+require_once '../config/auth.php';
+require_role('admin');
 include '../config/db.php';
 
 $id = intval($_GET['id']); // Secure integer casting
@@ -130,5 +132,4 @@ if (!$user) {
     <a href="users.php" class="btn-back">← Back to User Directory</a>
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

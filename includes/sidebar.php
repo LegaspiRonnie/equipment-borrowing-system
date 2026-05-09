@@ -3,6 +3,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <style>
+@import url("../assets/css/theme.css");
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -12,7 +14,9 @@ body {
 .sidebar {
     width: 220px;
     height: 100vh;
-    background: #1e293b;
+    background:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98)),
+        radial-gradient(circle at top left, rgba(59, 130, 246, 0.32), transparent 38%);
     position: fixed;
     top: 0;
     left: 0;
@@ -21,6 +25,8 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 12px 0 35px rgba(15, 23, 42, 0.12);
 }
 
 /* COLLAPSE */
@@ -42,6 +48,7 @@ body {
 .sidebar h2 {
     margin: 0;
     font-size: 16px;
+    letter-spacing: 0;
 }
 
 .sidebar.collapsed h2 {
@@ -67,11 +74,12 @@ body {
 }
 
 .sidebar a:hover {
-    background: #334155;
+    background: rgba(51, 65, 85, 0.78);
 }
 
 .sidebar a.active {
-    background: #3b82f6;
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
 }
 
 /* ICON */
@@ -89,6 +97,8 @@ body {
     margin-left: 220px;
     padding: 20px;
     transition: 0.3s;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
 .main.collapsed {
@@ -184,6 +194,38 @@ body {
 </div>
 
 <script>
+document.body.classList.add('app-shell-theme');
+
+function addEquipmentPageStrip() {
+    const main = document.querySelector(".main");
+    if (!main || main.querySelector(".dashboard-hero") || main.querySelector(".page-equipment-strip")) {
+        return;
+    }
+
+    const title = main.querySelector("h1")?.textContent?.trim() || "Equipment System";
+    const strip = document.createElement("section");
+    strip.className = "page-equipment-strip";
+    strip.innerHTML = `
+        <div>
+            <h2>${title}</h2>
+            <p>Manage computer equipment, borrowing requests, returns, records, and user access in one organized workspace.</p>
+        </div>
+        <div class="equipment-icons" aria-label="Computer equipment examples">
+            <div class="equipment-icon"><span class="icon-symbol icon-monitor"></span>Monitor</div>
+            <div class="equipment-icon"><span class="icon-symbol icon-system"></span>System Unit</div>
+            <div class="equipment-icon"><span class="icon-symbol icon-laptop"></span>Laptop</div>
+            <div class="equipment-icon"><span class="icon-symbol icon-keyboard"></span>Keyboard</div>
+        </div>
+    `;
+    main.prepend(strip);
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", addEquipmentPageStrip);
+} else {
+    addEquipmentPageStrip();
+}
+
 function toggleSidebar() {
     const sidebar = document.getElementById("sidebar");
 

@@ -1,4 +1,6 @@
 <?php
+require_once '../config/auth.php';
+require_role('admin');
 include '../config/db.php';
 
 // Quick Security Note: Always cast ID to int to prevent SQL Injection
@@ -103,5 +105,4 @@ $data = $result->fetch_assoc();
     </div>
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

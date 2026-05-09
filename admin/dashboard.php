@@ -1,11 +1,7 @@
 <?php
-session_start();
+require_once '../config/auth.php';
+require_role('admin');
 include '../config/db.php';
-
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
-    header("Location: ../index.php?error=Please login first");
-    exit();
-}
 
 /* =====================
    STATS FROM DATABASE
@@ -63,7 +59,6 @@ include '../includes/header.html';
         body {
             margin: 0;
             font-family: Arial;
-            background: #f4f6f8;
         }
 
         .sidebar {
@@ -99,10 +94,11 @@ include '../includes/header.html';
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
         }
 
         .datetime {
-            color: gray;
+            color: #bfdbfe;
             font-size: 14px;
         }
 
@@ -114,10 +110,11 @@ include '../includes/header.html';
         }
 
         .card {
-            background: white;
+            background: rgba(255, 255, 255, 0.94);
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            color: #0f172a;
         }
 
         .icon {
@@ -125,11 +122,12 @@ include '../includes/header.html';
         }
 
         .chart-box {
-            background: white;
+            background: rgba(255, 255, 255, 0.94);
             padding: 15px;
             border-radius: 10px;
             margin-top: 20px;
             height: 320px;
+            color: #0f172a;
         }
 
         .activity {
@@ -137,11 +135,12 @@ include '../includes/header.html';
         }
 
         .activity-item {
-            background: white;
+            background: rgba(255, 255, 255, 0.94);
             padding: 12px;
             margin-bottom: 8px;
             border-left: 4px solid #10b981;
             border-radius: 6px;
+            color: #0f172a;
         }
 
         canvas {
@@ -155,14 +154,39 @@ include '../includes/header.html';
 include '../includes/sidebar.php';
 ?>
 
+<script>
+document.body.classList.add('dashboard-theme');
+</script>
+
 
 <!-- MAIN -->
 <div class="main">
 
-    <!-- TOP -->
-    <div class="topbar">
-        <h1>Dashboard</h1>
-        <div class="datetime" id="datetime"></div>
+    <div class="dashboard-hero">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>Monitor equipment inventory, borrowing activity, users, and item availability from one control area.</p>
+            <div class="datetime" id="datetime"></div>
+        </div>
+
+        <div class="equipment-icons" aria-label="Computer equipment examples">
+            <div class="equipment-icon">
+                <span class="icon-symbol icon-monitor"></span>
+                Monitor
+            </div>
+            <div class="equipment-icon">
+                <span class="icon-symbol icon-system"></span>
+                System Unit
+            </div>
+            <div class="equipment-icon">
+                <span class="icon-symbol icon-laptop"></span>
+                Laptop
+            </div>
+            <div class="equipment-icon">
+                <span class="icon-symbol icon-keyboard"></span>
+                Keyboard
+            </div>
+        </div>
     </div>
 
     <!-- STATS -->

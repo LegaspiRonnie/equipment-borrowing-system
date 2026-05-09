@@ -1,8 +1,9 @@
 
+@import url("theme.css");
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f4f6f9;
 }
 
 /* Sidebar */
@@ -16,11 +17,12 @@ body {
 
 /* Cards */
 .card {
-    background: white;
+    background: var(--app-card);
     padding: 15px;
     margin: 10px;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border: 1px solid var(--app-border);
+    box-shadow: var(--app-shadow);
 }
 
 /* Grid */
@@ -33,7 +35,7 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: rgba(255, 255, 255, 0.94);
 }
 
 table th, table td {
@@ -58,7 +60,7 @@ table th, table td {
 /* Chart placeholder */
 .chart {
     height: 200px;
-    background: linear-gradient(to right, #60a5fa, #34d399);
+    background: linear-gradient(135deg, #2563eb, #0ea5e9, #10b981);
     border-radius: 10px;
     display:flex;
     align-items:center;

@@ -1,5 +1,6 @@
-
 <?php
+require_once '../config/auth.php';
+require_role('admin');
 include '../includes/header.html';
 ?>
 <!-- SIDEBAR -->

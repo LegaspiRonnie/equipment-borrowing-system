@@ -1,11 +1,7 @@
 <?php
-session_start();
+require_once '../config/auth.php';
+require_role('user');
 include '../config/db.php';
-
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'user') {
-    header("Location: ../index.php?error=Please login first");
-    exit();
-}
 
 // 1. Pagination Settings
 $limit = 9; // Grid of 3x3 looks best
@@ -120,17 +116,41 @@ $equipment = $conn->query("SELECT * FROM equipment $where_clause ORDER BY name A
         #datetime { font-weight: bold; color: #4CAF50; }
     </style>
 </head>
-<body>
+<body class="dashboard-theme">
 
 <?php include '../includes/sidebar-user.php'; ?>
 
 <div class="main">
 
-    <div class="topbar">
+    <div class="dashboard-hero">
         <div>
             <h1>Equipment Library</h1>
+            <p>Browse available computer equipment, check stock, and start a borrowing request.</p>
             <div id="datetime"></div>
         </div>
+
+        <div class="equipment-icons" aria-label="Computer equipment examples">
+            <div class="equipment-icon">
+                <span class="icon-symbol icon-laptop"></span>
+                Laptop
+            </div>
+            <div class="equipment-icon">
+                <span class="icon-symbol icon-keyboard"></span>
+                Keyboard
+            </div>
+            <div class="equipment-icon">
+                <span class="icon-symbol icon-monitor"></span>
+                Monitor
+            </div>
+            <div class="equipment-icon">
+                <span class="icon-symbol icon-system"></span>
+                System Unit
+            </div>
+        </div>
+    </div>
+
+    <div class="topbar">
+        <div></div>
         
         <form method="GET" class="search-box">
             <input type="text" name="search" placeholder="Search equipment..." value="<?php echo htmlspecialchars($search); ?>">
@@ -193,5 +213,4 @@ $equipment = $conn->query("SELECT * FROM equipment $where_clause ORDER BY name A
     updateTime();
 </script>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

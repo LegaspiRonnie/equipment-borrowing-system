@@ -1,26 +1,32 @@
-<!-- SCRIPT -->
+<!-- <footer class="app-footer">
+    Computer Equipment Borrowing System
+</footer> -->
+
 <script>
-// LOAD SAVED COLOR
-window.onload = function () {
-    let savedColor = localStorage.getItem("bgColor");
+const bgColorPicker = document.getElementById("bgColor");
 
-    if (savedColor) {
-        document.body.style.background = savedColor;
-        document.getElementById("bgColor").value = savedColor;
-    }
-};
+if (bgColorPicker) {
+    window.addEventListener("load", function () {
+        let savedColor = localStorage.getItem("bgColor");
 
-// CHANGE COLOR
-document.getElementById("bgColor").addEventListener("input", function () {
-    document.body.style.background = this.value;
-    localStorage.setItem("bgColor", this.value);
-});
+        if (savedColor) {
+            document.body.style.background = savedColor;
+            bgColorPicker.value = savedColor;
+        }
+    });
 
-// RESET
+    bgColorPicker.addEventListener("input", function () {
+        document.body.style.background = this.value;
+        localStorage.setItem("bgColor", this.value);
+    });
+}
+
 function resetColor() {
     document.body.style.background = "";
     localStorage.removeItem("bgColor");
-    document.getElementById("bgColor").value = "#ffffff";
+    if (bgColorPicker) {
+        bgColorPicker.value = "#ffffff";
+    }
 }
 </script>
 

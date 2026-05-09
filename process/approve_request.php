@@ -1,4 +1,6 @@
 <?php
+require_once '../config/auth.php';
+require_role('admin');
 include '../config/db.php';
 
 $id = $_GET['id'];

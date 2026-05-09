@@ -1,4 +1,6 @@
 <?php
+require_once '../config/auth.php';
+require_role('admin');
 if (!isset($_GET['id'])) {
     header("Location: users.php");
     exit();
@@ -77,5 +79,4 @@ $id = intval($_GET['id']);
     </div>
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

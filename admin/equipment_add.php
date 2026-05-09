@@ -1,3 +1,7 @@
+<?php
+require_once '../config/auth.php';
+require_role('admin');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -150,5 +154,4 @@
     </div>
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

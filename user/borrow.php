@@ -1,11 +1,7 @@
 <?php
-session_start();
+require_once '../config/auth.php';
+require_role('user');
 include '../config/db.php';
-
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'user') {
-    header("Location: ../index.php?error=Please login first");
-    exit();
-}
 
 $user_id = (int) $_SESSION['user_id'];
 
@@ -184,5 +180,4 @@ function confirmSubmit() {
 }
 </script>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

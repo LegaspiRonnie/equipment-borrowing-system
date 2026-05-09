@@ -1,11 +1,7 @@
 <?php
-session_start();
+require_once '../config/auth.php';
+require_role('user');
 include '../config/db.php';
-
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit();
-}
 
 $user_id = (int) $_SESSION['user_id'];
 
@@ -181,5 +177,4 @@ $result = $conn->query("
 
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

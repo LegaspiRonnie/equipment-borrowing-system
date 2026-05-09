@@ -1,6 +1,7 @@
+@import url("theme.css");
+
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #4facfe, #00f2fe);
     margin: 0;
 }
 
@@ -12,11 +13,12 @@ body {
 }
 
 .form-box {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.94);
     padding: 30px;
     width: 320px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 16px 35px rgba(15, 23, 42, 0.12);
     text-align: center;
 }
 
@@ -35,7 +37,7 @@ body {
 .form-box button {
     width: 100%;
     padding: 10px;
-    background: #4facfe;
+    background: #2563eb;
     border: none;
     color: white;
     border-radius: 5px;
@@ -43,7 +45,7 @@ body {
 }
 
 .form-box button:hover {
-    background: #00c6ff;
+    background: #0ea5e9;
 }
 
 .form-box p {
@@ -53,7 +55,9 @@ body {
 .sidebar {
     width: 200px;
     height: 100vh;
-    background: #333;
+    background:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98)),
+        radial-gradient(circle at top left, rgba(59, 130, 246, 0.3), transparent 38%);
     color: white;
     position: fixed;
     padding: 20px;

@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once '../config/auth.php';
+require_role('admin');
 include '../config/db.php';
 
 // 1. Capture search term

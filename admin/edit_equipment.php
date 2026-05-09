@@ -1,3 +1,7 @@
+<?php
+require_once '../config/auth.php';
+require_role('admin');
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,5 +39,4 @@ include '../includes/sidebar.php';
 
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

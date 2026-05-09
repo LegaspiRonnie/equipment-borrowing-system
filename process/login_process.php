@@ -2,15 +2,22 @@
 
 session_start();
 include '../config/db.php';
+include '../config/recaptcha.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $email = trim($_POST['email']);
     $password = $_POST['password'];
+    $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
 
     // ✅ Validation
     if (empty($email) || empty($password)) {
         header("Location: ../index.php?error=All fields are required");
+        exit();
+    }
+
+    if (!verify_recaptcha($recaptchaResponse)) {
+        header("Location: ../index.php?error=Please complete the reCAPTCHA verification");
         exit();
     }
 

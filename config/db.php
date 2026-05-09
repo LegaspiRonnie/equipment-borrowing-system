@@ -1,16 +1,16 @@
 <?php
 
-$host = "localhost";
-$username = "root";
-$password = "";
-$database = "equipment_borrowing_system";
+$host = getenv('DB_HOST') ?: "127.0.0.1";
+$username = getenv('DB_USERNAME') ?: "root";
+$password = getenv('DB_PASSWORD') ?: "";
+$database = getenv('DB_DATABASE') ?: "equipment_borrowing_system";
 
 // Create connection
-$conn = new mysqli($host, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    $conn = new mysqli($host, $username, $password, $database);
+} catch (mysqli_sql_exception $e) {
+    die("Database connection failed. Please check that MySQL/MariaDB is running and that config/db.php has the correct host, username, password, and database name.");
 }
 
 // Optional: set charset

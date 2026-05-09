@@ -1,13 +1,19 @@
 <?php
-session_start();
+require_once '../config/auth.php';
+require_role('user');
 include '../config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $user_id = $_SESSION['user_id'];
-    $equipment_id = $_POST['equipment_id'];
-    $quantity = $_POST['quantity'];
-    $purpose = $_POST['purpose'];
-    $return_date = $_POST['return_date'];
+    $user_id = current_user_id();
+    $equipment_id = isset($_POST['equipment_id']) ? (int) $_POST['equipment_id'] : 0;
+    $quantity = isset($_POST['quantity']) ? (int) $_POST['quantity'] : 0;
+    $purpose = trim($_POST['purpose'] ?? '');
+    $return_date = trim($_POST['return_date'] ?? '');
+
+    if ($equipment_id <= 0 || $quantity <= 0 || $purpose === '' || $return_date === '') {
+        header("Location: ../403.php");
+        exit();
+    }
 
     // Insert request
     $stmt = $conn->prepare("INSERT INTO borrow_requests (user_id, equipment_id, quantity, purpose, return_date) VALUES (?, ?, ?, ?, ?)");

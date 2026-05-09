@@ -1,4 +1,6 @@
 <?php
+require_once '../config/auth.php';
+require_role('admin');
 include '../config/db.php';
 
 $id = intval($_GET['id']);
@@ -148,5 +150,4 @@ if (!$user) {
     </a>
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>

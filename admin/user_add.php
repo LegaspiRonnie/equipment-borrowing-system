@@ -1,3 +1,7 @@
+<?php
+require_once '../config/auth.php';
+require_role('admin');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,5 +134,4 @@
     <a href="users.php" class="back-link">← Back to User List</a>
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.html'; ?>
