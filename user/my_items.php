@@ -47,6 +47,12 @@ $result = $conn->query("
 <head>
     <title>My Items</title>
     <style>
+         table, th, td {
+            color: #000 !important;
+        }
+        .title {
+            color:black;
+        }
         body { margin: 0; font-family: Arial; background: #f4f6f8; }
         .main { margin-left: 220px; padding: 20px; }
         

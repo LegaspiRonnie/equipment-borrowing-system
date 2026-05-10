@@ -125,6 +125,9 @@ include '../includes/header.html';
         canvas {
             max-height: 260px !important;
         }
+        h2, h3, p {
+            color: black;
+        }
     </style>
 
 <?php include '../partials/alert.php'; ?>
