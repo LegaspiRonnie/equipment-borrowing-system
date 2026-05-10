@@ -1,36 +1,52 @@
 <?php
 require_once '../config/auth.php';
 require_role('admin');
+
 include '../config/db.php';
 
-// 1. Validate the ID exists and is a number
-if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
+session_start();
 
-    // 2. Use a prepared statement for security
-    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
-    $stmt->bind_param("i", $id);
+// Validate ID
+if (!isset($_GET['id'])) {
 
-    if ($stmt->execute()) {
-        // 3. Success Alert and Redirect
-        echo "<script>
-                alert('User deleted successfully.');
-                window.location.href = '../admin/users.php';
-              </script>";
-    } else {
-        // 4. Error Alert
-        echo "<script>
-                alert('Error: Could not delete user.');
-                window.history.back();
-              </script>";
-    }
-    
-    $stmt->close();
-} else {
-    // Redirect if no ID is provided
+    $_SESSION['alert'] = [
+        'type' => 'error',
+        'message' => 'User ID not found.'
+    ];
+
     header("Location: ../admin/users.php");
+    exit();
 }
 
+$id = (int) $_GET['id'];
+
+// Prepare delete
+$stmt = $conn->prepare("
+    DELETE FROM users 
+    WHERE id = ?
+");
+
+$stmt->bind_param("i", $id);
+
+// Execute
+if ($stmt->execute()) {
+
+    $_SESSION['alert'] = [
+        'type' => 'success',
+        'message' => 'User deleted successfully.'
+    ];
+
+} else {
+
+    $_SESSION['alert'] = [
+        'type' => 'error',
+        'message' => 'Failed to delete user.'
+    ];
+}
+
+$stmt->close();
 $conn->close();
+
+header("Location: ../admin/users.php");
 exit();
 ?>

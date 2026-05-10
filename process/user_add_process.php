@@ -1,32 +1,87 @@
 <?php
 require_once '../config/auth.php';
 require_role('admin');
+
 include '../config/db.php';
 
-$name = $_POST['name'];
-$email = $_POST['email'];
-// Always a good idea to check if password isn't empty before hashing
-$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-$role = $_POST['role'];
+session_start();
 
-// Prepare the statement
-$stmt = $conn->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
+// Validate request method
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+
+    $_SESSION['alert'] = [
+        'type' => 'error',
+        'message' => 'Invalid request.'
+    ];
+
+    header("Location: ../admin/users.php");
+    exit();
+}
+
+// Get form data
+$name = trim($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$passwordRaw = $_POST['password'] ?? '';
+$role = trim($_POST['role'] ?? '');
+
+// Validate inputs
+if (
+    $name === '' ||
+    $email === '' ||
+    $passwordRaw === '' ||
+    $role === ''
+) {
+
+    $_SESSION['alert'] = [
+        'type' => 'warning',
+        'message' => 'All fields are required.'
+    ];
+
+    header("Location: ../admin/users.php");
+    exit();
+}
+
+// Validate email format
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+    $_SESSION['alert'] = [
+        'type' => 'error',
+        'message' => 'Invalid email format.'
+    ];
+
+    header("Location: ../admin/users.php");
+    exit();
+}
+
+// Hash password
+$password = password_hash($passwordRaw, PASSWORD_DEFAULT);
+
+// Insert user
+$stmt = $conn->prepare("
+    INSERT INTO users (name, email, password, role) 
+    VALUES (?, ?, ?, ?)
+");
+
 $stmt->bind_param("ssss", $name, $email, $password, $role);
 
-// Execute and check for success
 if ($stmt->execute()) {
-    echo "<script>
-            alert('New user \'$name\' has been successfully created.');
-            window.location.href = '../admin/users.php';
-          </script>";
+
+    $_SESSION['alert'] = [
+        'type' => 'success',
+        'message' => "User '{$name}' has been created successfully."
+    ];
+
 } else {
-    // Handle errors (like duplicate emails)
-    echo "<script>
-            alert('Error: Could not create user. The email might already be in use.');
-            window.history.back();
-          </script>";
+
+    $_SESSION['alert'] = [
+        'type' => 'error',
+        'message' => 'Failed to create user. Email may already exist.'
+    ];
 }
 
 $stmt->close();
 $conn->close();
+
+header("Location: ../admin/users.php");
+exit();
 ?>

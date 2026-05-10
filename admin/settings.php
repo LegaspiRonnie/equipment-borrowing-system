@@ -7,7 +7,7 @@ include '../includes/header.html';
 <?php
 include '../includes/sidebar.php';
 ?>
-
+<?php include '../partials/alert.php'; ?>
 
 <!-- MAIN -->
 <div class="main">

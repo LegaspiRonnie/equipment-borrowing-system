@@ -76,7 +76,7 @@ $data = $result->fetch_assoc();
     </style>
 </head>
 <body>
-
+<?php include '../partials/alert.php'; ?>
 <?php include '../includes/sidebar.php'; ?>
 
 <div class="main">

@@ -58,6 +58,7 @@ http_response_code(403);
     </style>
 </head>
 <body>
+    <?php include '../partials/alert.php'; ?>
     <div class="forbidden-box">
         <h1>403</h1>
         <p>You are not authorized to access this page.</p>

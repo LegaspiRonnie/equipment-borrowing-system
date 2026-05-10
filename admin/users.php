@@ -62,7 +62,7 @@ $result = $conn->query($query);
     .pagination a.active { background: var(--primary); color: white; border-color: var(--primary); }
     .pagination a:hover:not(.active) { background: #eee; }
 </style>
-
+<?php include '../partials/alert.php'; ?>
 <?php include '../includes/sidebar.php'; ?>
 
 <div class="main">

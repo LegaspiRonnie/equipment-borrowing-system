@@ -1,7 +1,18 @@
 <?php
 session_start();
+
+// destroy session
+session_unset();
 session_destroy();
 
-header("Location: index.php?success=Logged out successfully");
+// start fresh session for alert
+session_start();
+
+$_SESSION['alert'] = [
+    'type' => 'success',
+    'message' => 'Logged out successfully.'
+];
+
+header("Location: index.php");
 exit();
 ?>

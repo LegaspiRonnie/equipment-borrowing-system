@@ -99,7 +99,7 @@ $result = $conn->query($sql);
 
     img { border-radius: 8px; object-fit: cover; background: #f1f5f9; }
 </style>
-
+<?php include '../partials/alert.php'; ?>
 <?php include '../includes/sidebar.php'; ?>
 
 <div class="main">

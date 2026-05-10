@@ -64,7 +64,7 @@ $id = intval($_GET['id']);
     </style>
 </head>
 <body>
-
+<?php include '../partials/alert.php'; ?>
 <?php include '../includes/sidebar.php'; ?>
 
 <div class="main">

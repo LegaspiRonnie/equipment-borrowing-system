@@ -127,7 +127,7 @@ include '../includes/header.html';
         }
     </style>
 
-
+<?php include '../partials/alert.php'; ?>
 <!-- SIDEBAR -->
 <?php
 include '../includes/sidebar.php';

@@ -9,7 +9,7 @@ require_role('admin');
     <link rel="stylesheet" href="../assets/css/global.css">
 </head>
 <body>
-
+<?php include '../partials/alert.php'; ?>
 <?php
 include '../includes/sidebar.php';
 ?>

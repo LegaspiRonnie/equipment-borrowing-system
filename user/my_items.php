@@ -91,6 +91,7 @@ $result = $conn->query("
     </style>
 </head>
 <body>
+    <?php include '../partials/alert.php'; ?>
 
 <?php include '../includes/sidebar-user.php'; ?>
 

@@ -248,7 +248,38 @@
 </head>
 
 <body>
+<!-- ✅ ALERT SYSTEM (FIXED) -->
+<?php include 'partials/alert.php'; ?>
 
+<?php if (isset($_SESSION['alert'])): ?>
+<script>
+function closeAlert() {
+    const alertBox = document.getElementById('customAlert');
+    if (!alertBox) return;
+
+    alertBox.style.animation = 'fadeOut 0.3s ease';
+
+    setTimeout(() => {
+        alertBox.remove();
+    }, 300);
+}
+
+// Auto close after 4 seconds
+setTimeout(() => {
+    const alertBox = document.getElementById('customAlert');
+
+    if (alertBox) {
+        alertBox.style.animation = 'fadeOut 0.3s ease';
+
+        setTimeout(() => {
+            alertBox.remove();
+        }, 300);
+    }
+}, 4000);
+</script>
+
+<?php unset($_SESSION['alert']); ?>
+<?php endif; ?>
 <?php include 'config/recaptcha.php'; ?>
 
 <?php if (isset($_GET['success'])): ?>

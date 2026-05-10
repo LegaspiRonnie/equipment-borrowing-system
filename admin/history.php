@@ -39,7 +39,7 @@ $query = "
 ";
 $result = $conn->query($query);
 ?>
-
+<?php include '../partials/alert.php'; ?>
 <?php include '../includes/header.html'; ?>
 <?php include '../includes/sidebar.php'; ?>
 

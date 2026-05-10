@@ -277,6 +277,7 @@
 </head>
 
 <body>
+    <?php include 'partials/alert.php'; ?>
 
 <?php include 'config/recaptcha.php'; ?>
 

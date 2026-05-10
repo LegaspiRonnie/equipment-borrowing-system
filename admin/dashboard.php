@@ -161,7 +161,7 @@ document.body.classList.add('dashboard-theme');
 
 <!-- MAIN -->
 <div class="main">
-
+<?php include '../partials/alert.php'; ?>
     <div class="dashboard-hero">
         <div>
             <h1>Admin Dashboard</h1>

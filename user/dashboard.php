@@ -117,6 +117,7 @@ $equipment = $conn->query("SELECT * FROM equipment $where_clause ORDER BY name A
     </style>
 </head>
 <body class="dashboard-theme">
+    <?php include '../partials/alert.php'; ?>
 
 <?php include '../includes/sidebar-user.php'; ?>
 
